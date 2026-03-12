@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>MedTerm AI - البطاقات التعليمية</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .flashcards-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .progress-indicator {
+            color: #2c3e50;
+            font-weight: 600;
+            background: #f8f9fa;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .flashcard {
+            background: transparent;
+            width: 100%;
+            height: 300px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .flashcard-front h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .flashcard-front p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .flashcard-back {
+            background: white;
+            transform: rotateY(180deg);
+            color: #2c3e50;
+        }
+
+        .flashcard-back .term-arabic {
+            font-size: 32px;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+
+        .flashcard-back .term-definition {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+
+        .flashcard-back .term-example {
+            font-size: 16px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.prev {
+            color: #3498db;
+        }
+
+        .action-btn.next {
+            color: #27ae60;
+        }
+
+        .action-btn.save {
+            color: #f1c40f;
+        }
+
+        .action-btn.save.saved {
+            background: #f1c40f;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #95a5a6;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #bdc3c7;
+        }
+
+        @media (max-width: 768px) {
+            .flashcard {
+                height: 250px;
+            }
+            
+            .flashcard-front h2 {
+                font-size: 28px;
+            }
+            
+            .flashcard-back .term-arabic {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <a href="../index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 data-lang="flashcards">البطاقات التعليمية</h1>
+            <div class="header-actions">
+                <button id="language-toggle" class="lang-btn">EN</button>
+            </div>
+        </header>
+
+        <div class="flashcards-container">
+            <div class="controls-bar">
+                <select id="filter-select" class="filter-select">
+                    <option value="all">📚 جميع المصطلحات</option>
+                    <option value="saved">⭐ المحفوظة فقط</option>
+                    <option value="chapter1">📖 الفصل 1</option>
+                    <option value="chapter2">📖 الفصل 2</option>
+                    <option value="chapter3">📖 الفصل 3</option>
+                    <option value="chapter4">📖 الفصل 4</option>
+                    <option value="chapter5">📖 الفصل 5</option>
+                    <option value="chapter6">📖 الفصل 6</option>
+                    <option value="chapter7">📖 الفصل 7</option>
+                    <option value="chapter8">📖 الفصل 8</option>
+                    <option value="chapter9">📖 الفصل 9</option>
+                    <option value="chapter10">📖 الفصل 10</option>
+                </select>
+                <span id="progress" class="progress-indicator">0/0</span>
+            </div>
+
+            <div id="flashcard-container">
+                <!-- الفلاش كارد سيتم تعبئتها هنا -->
+            </div>
+
+            <div class="action-buttons">
+                <button id="prev-btn" class="action-btn prev">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button id="save-btn" class="action-btn save">
+                    <i class="far fa-star"></i>
+                </button>
+                <button id="next-btn" class="action-btn next">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span data-lang="home">الرئيسية</span>
+            </a>
+            <a href="chapters.html" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span data-lang="chapters">الفصول</span>
+            </a>
+            <a href="analyzer.html" class="nav-item">
+                <i class="fas fa-microscope"></i>
+                <span data-lang="analyzer">المحلل</span>
+            </a>
+            <a href="flashcards.html" class="nav-item active">
+                <i class="fas fa-layer-group"></i>
+                <span data-lang="flashcards">بطاقات</span>
+            </a>
+            <a href="saved.html" class="nav-item">
+                <i class="fas fa-star"></i>
+                <span data-lang="saved">المحفوظات</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="../app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentTerms = [];
+            let currentIndex = 0;
+            let currentFilter = 'all';
+            
+            const flashcardContainer = document.getElementById('flashcard-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const filterSelect = document.getElementById('filter-select');
+            const progressSpan = document.getElementById('progress');
+            
+            // تحميل المصطلحات
+            function loadTerms() {
+                if (!window.medTermAI) return;
+                
+                let terms = [...window.medTermAI.database.terms];
+                
+                // تطبيق الفلتر
+                if (currentFilter === 'saved') {
+                    const savedIds = window.medTermAI.savedTerms || [];
+                    terms = terms.filter(t => savedIds.includes(t.id));
+                } else if (currentFilter.startsWith('chapter')) {
+                    const chapterNum = parseInt(currentFilter.replace('chapter', ''));
+                    terms = terms.filter(t => t.chapter === chapterNum);
+                }
+                
+                currentTerms = terms;
+                currentIndex = 0;
+                
+                if (currentTerms.length === 0) {
+                    showEmptyState();
+                } else {
+                    renderFlashcard(0);
+                }
+                
+                updateProgress();
+            }
+            
+            // عرض فلاش كارد
+            function renderFlashcard(index) {
+                if (!currentTerms.length) return;
+                
+                const term = currentTerms[index];
+                const isSaved = window.medTermAI?.isTermSaved(term.id) || false;
+                
+                const html = `
+                    <div class="flashcard" id="current-flashcard">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <h2>${term.term}</h2>
+                                <p>اضغط للوجه الخلفي</p>
+                            </div>
+                            <div class="flashcard-back">
+                                <div class="term-arabic">${term.arabic}</div>
+                                <div class="term-definition">${term.definition || ''}</div>
+                                ${term.examples ? `<div class="term-example">مثال: ${term.examples[0]}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                flashcardContainer.innerHTML = html;
+                
+                // تحديث زر الحفظ
+                updateSaveButton(isSaved);
+                
+                // إضافة حدث التقليب
+                const flashcard = document.getElementById('current-flashcard');
+                flashcard.addEventListener('click', () => {
+                    flashcard.classList.toggle('flipped');
+                });
+            }
+            
+            // تحديث زر الحفظ
+            function updateSaveButton(saved) {
+                if (saved) {
+                    saveBtn.innerHTML = '<i class="fas fa-star"></i>';
+                    saveBtn.classList.add('saved');
+                } else {
+                    saveBtn.innerHTML = '<i class="far fa-star"></i>';
+                    saveBtn.classList.remove('saved');
+                }
+            }
+            
+            // عرض حالة فارغة
+            function showEmptyState() {
+                flashcardContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="far fa-frown"></i>
+                        <h3>لا توجد بطاقات</h3>
+                        <p>لا توجد مصطلحات تطابق الفلتر المحدد</p>
+                    </div>
+                `;
+            }
+            
+            // تحديث عداد التقدم
+            function updateProgress() {
+                progressSpan.textContent = `${currentIndex + 1}/${currentTerms.length}`;
+            }
+            
+            // أحداث الأزرار
+            prevBtn.addEventListener('click', () => {
+                if (currentTerms.length === 0) return;
+                currentIndex = (currentIndex - 1 + currentTerms.length) % currentTerms.length;
+                renderFlashcard(currentIndex);
+                updateProgress();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentTerms.length === 0) return;
+                currentIndex = (currentIndex + 1) % currentTerms.length;
+                renderFlashcard(currentIndex);
+                updateProgress();
+            });
+            
+            saveBtn.addEventListener('click', () => {
+                if (!currentTerms.length || !window.medTermAI) return;
+                
+                const term = currentTerms[currentIndex];
+                const isSaved = window.medTermAI.isTermSaved(term.id);
+                
+                if (isSaved) {
+                    window.medTermAI.removeSavedTerm(term.id);
+                } else {
+                    window.medTermAI.saveTerm(term.id);
+                }
+                
+                updateSaveButton(!isSaved);
+            });
+            
+            filterSelect.addEventListener('change', (e) => {
+                currentFilter = e.target.value;
+                loadTerms();
+            });
+            
+            // دعم لوحة المفاتيح
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    nextBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    prevBtn.click();
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    document.getElementById('current-flashcard')?.click();
+                }
+            });
+            
+            // تحميل أولي
+            setTimeout(loadTerms, 500); // انتظار تحميل قاعدة البيانات
+        });
+    </script>
+</body>
+</html>
