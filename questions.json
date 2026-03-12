@@ -1,0 +1,162 @@
+[
+    {
+        "id": 1,
+        "question": "What does the suffix '-itis' mean?",
+        "options": ["Pain", "Inflammation", "Tumor", "Disease"],
+        "correct": 1,
+        "chapter": 1,
+        "system": "general"
+    },
+    {
+        "id": 2,
+        "question": "ما معنى البادئة 'hyper-'؟",
+        "options": ["نقص", "فرط", "تحت", "بين"],
+        "correct": 1,
+        "chapter": 1,
+        "system": "general"
+    },
+    {
+        "id": 3,
+        "question": "Myocarditis is inflammation of the:",
+        "options": ["Heart muscle", "Heart lining", "Heart valves", "Pericardium"],
+        "correct": 0,
+        "chapter": 5,
+        "system": "cardiovascular"
+    },
+    {
+        "id": 4,
+        "question": "أي مما يلي يعني 'هشاشة العظام'؟",
+        "options": ["Arthritis", "Osteoporosis", "Osteomyelitis", "Osteomalacia"],
+        "correct": 1,
+        "chapter": 4,
+        "system": "skeletal"
+    },
+    {
+        "id": 5,
+        "question": "The root 'nephr' refers to which organ?",
+        "options": ["Liver", "Heart", "Kidney", "Lung"],
+        "correct": 2,
+        "chapter": 9,
+        "system": "urinary"
+    },
+    {
+        "id": 6,
+        "question": "True or False: 'ectomy' means surgical incision.",
+        "options": ["True", "False"],
+        "correct": 1,
+        "chapter": 1,
+        "system": "general"
+    },
+    {
+        "id": 7,
+        "question": "Pneumonia affects which system?",
+        "options": ["Cardiovascular", "Respiratory", "Digestive", "Nervous"],
+        "correct": 1,
+        "chapter": 7,
+        "system": "respiratory"
+    },
+    {
+        "id": 8,
+        "question": "ما معنى الاختصار 'CXR'؟",
+        "options": ["تخطيط قلب", "أشعة صدر", "تحليل دم", "رنين مغناطيسي"],
+        "correct": 1,
+        "chapter": 11,
+        "system": "general"
+    },
+    {
+        "id": 9,
+        "question": "The suffix '-emia' refers to:",
+        "options": ["Blood condition", "Pain", "Swelling", "Tumor"],
+        "correct": 0,
+        "chapter": 1,
+        "system": "general"
+    },
+    {
+        "id": 10,
+        "question": "Gastroenteritis involves inflammation of:",
+        "options": ["Stomach and liver", "Stomach and intestines", "Intestines and colon", "Esophagus and stomach"],
+        "correct": 1,
+        "chapter": 8,
+        "system": "digestive"
+    },
+    {
+        "id": 11,
+        "question": "أي من التالي يعني 'تصلب الشرايين'؟",
+        "options": ["Atherosclerosis", "Arteriosclerosis", "Atheroma", "Arteritis"],
+        "correct": 1,
+        "chapter": 5,
+        "system": "cardiovascular"
+    },
+    {
+        "id": 12,
+        "question": "The prefix 'brady-' means:",
+        "options": ["Fast", "Slow", "Irregular", "Absent"],
+        "correct": 1,
+        "chapter": 1,
+        "system": "general"
+    },
+    {
+        "id": 13,
+        "question": "Cystitis is inflammation of the:",
+        "options": ["Kidney", "Ureter", "Bladder", "Urethra"],
+        "correct": 2,
+        "chapter": 9,
+        "system": "urinary"
+    },
+    {
+        "id": 14,
+        "question": "ما معنى الاختصار 'DM'؟",
+        "options": ["داء السكري", "ضغط الدم", "فشل القلب", "مرض الكلى"],
+        "correct": 0,
+        "chapter": 11,
+        "system": "general"
+    },
+    {
+        "id": 15,
+        "question": "The root 'hepat' refers to:",
+        "options": ["Heart", "Liver", "Kidney", "Lung"],
+        "correct": 1,
+        "chapter": 8,
+        "system": "digestive"
+    },
+    {
+        "id": 16,
+        "question": "True or False: 'rrhage' means surgical suturing.",
+        "options": ["True", "False"],
+        "correct": 1,
+        "chapter": 1,
+        "system": "general"
+    },
+    {
+        "id": 17,
+        "question": "Hyperthyroidism involves which gland?",
+        "options": ["Pituitary", "Thyroid", "Adrenal", "Pancreas"],
+        "correct": 1,
+        "chapter": 10,
+        "system": "endocrine"
+    },
+    {
+        "id": 18,
+        "question": "أي مما يلي يعني 'التهاب المفاصل'؟",
+        "options": ["Osteitis", "Arthritis", "Bursitis", "Tendonitis"],
+        "correct": 1,
+        "chapter": 4,
+        "system": "skeletal"
+    },
+    {
+        "id": 19,
+        "question": "The suffix '-plegia' means:",
+        "options": ["Pain", "Paralysis", "Breathing", "Swallowing"],
+        "correct": 1,
+        "chapter": 1,
+        "system": "general"
+    },
+    {
+        "id": 20,
+        "question": "Leukemia is cancer of which cells?",
+        "options": ["Red blood cells", "White blood cells", "Platelets", "Plasma"],
+        "correct": 1,
+        "chapter": 5,
+        "system": "cardiovascular"
+    }
+]
