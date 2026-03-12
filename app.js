@@ -1123,7 +1123,105 @@ function removeSavedTerm(termId) {
 function isTermSaved(termId) {
     return savedTerms.includes(termId);
 }
+// ==================== دوال المفضلة ====================
+function saveTerm(termId) {
+    if (!savedTerms.includes(termId)) {
+        savedTerms.push(termId);
+        saveUserData();
+        
+        // تحديث واجهة المستخدم إذا كانت مفتوحة
+        updateSavedUI(termId, true);
+        return true;
+    }
+    return false;
+}
 
+function removeSavedTerm(termId) {
+    const index = savedTerms.indexOf(termId);
+    if (index > -1) {
+        savedTerms.splice(index, 1);
+        saveUserData();
+        
+        // تحديث واجهة المستخدم إذا كانت مفتوحة
+        updateSavedUI(termId, false);
+        return true;
+    }
+    return false;
+}
+
+function isTermSaved(termId) {
+    return savedTerms.includes(termId);
+}
+
+function getSavedTerms() {
+    return database.terms.filter(term => savedTerms.includes(term.id));
+}
+
+// تحديث واجهة المستخدم عند الحفظ/الإزالة
+function updateSavedUI(termId, isSaved) {
+    // تحديث النجوم في الصفحة
+    document.querySelectorAll(`.save-btn[data-term-id="${termId}"]`).forEach(btn => {
+        if (isSaved) {
+            btn.innerHTML = '<i class="fas fa-star"></i>';
+            btn.classList.add('saved');
+        } else {
+            btn.innerHTML = '<i class="far fa-star"></i>';
+            btn.classList.remove('saved');
+        }
+    });
+}
+
+// ==================== دوال التقدم ====================
+function recordChapterView(chapterNum) {
+    if (!userProgress.viewedChapters.includes(chapterNum)) {
+        userProgress.viewedChapters.push(chapterNum);
+        saveUserData();
+    }
+}
+
+function recordQuizCompletion(score, total) {
+    userProgress.completedQuizzes.push({
+        date: new Date().toISOString(),
+        score: score,
+        total: total,
+        percentage: (score / total) * 100
+    });
+    saveUserData();
+}
+
+function getProgressStats() {
+    return {
+        chaptersViewed: userProgress.viewedChapters.length,
+        quizzesTaken: userProgress.completedQuizzes.length,
+        averageScore: calculateAverageScore(),
+        savedCount: savedTerms.length
+    };
+}
+
+function calculateAverageScore() {
+    if (userProgress.completedQuizzes.length === 0) return 0;
+    
+    const total = userProgress.completedQuizzes.reduce((sum, q) => sum + q.percentage, 0);
+    return Math.round(total / userProgress.completedQuizzes.length);
+}
+
+// ==================== دوال التصدير المحدثة ====================
+window.medTermAI = {
+    search,
+    analyzeTerm,
+    getRandomQuestions,
+    saveTerm,
+    removeSavedTerm,
+    isTermSaved,
+    getSavedTerms,
+    recordChapterView,
+    recordQuizCompletion,
+    getProgressStats,
+    database,
+    savedTerms,
+    userProgress,
+    toggleLanguage
+};
 // ==================== دوال التصدير ====================
 window.medTermAI = {
     search,
