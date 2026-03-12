@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>MedTerm AI - منصة المصطلحات الطبية الذكية</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- شريط التنقل العلوي -->
+        <header class="main-header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>MedTerm AI</h1>
+            </div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="language-toggle" class="lang-btn" aria-label="Toggle language">
+                    EN
+                </button>
+            </div>
+        </header>
+
+        <!-- شريط البحث الرئيسي -->
+        <div class="search-section">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="main-search" class="search-input" placeholder="ابحث عن مصطلح، جهاز، اختصار..." autocomplete="off">
+            </div>
+        </div>
+
+        <!-- بطاقات الوصول السريع -->
+        <div class="quick-access">
+            <a href="pages/chapters.html" class="quick-card">
+                <i class="fas fa-book"></i>
+                <span data-lang="chapters">الفصول</span>
+            </a>
+            <a href="pages/analyzer.html" class="quick-card">
+                <i class="fas fa-microscope"></i>
+                <span data-lang="analyzer">المحلل</span>
+            </a>
+            <a href="#" class="quick-card" id="quiz-card">
+                <i class="fas fa-question-circle"></i>
+                <span data-lang="quiz">اختبار سريع</span>
+            </a>
+            <a href="pages/abbreviations.html" class="quick-card">
+                <i class="fas fa-font"></i>
+                <span data-lang="abbreviations">الاختصارات</span>
+            </a>
+            <a href="pages/systems.html" class="quick-card">
+                <i class="fas fa-bone"></i>
+                <span data-lang="systems">الأجهزة</span>
+            </a>
+            <a href="#" class="quick-card" id="flashcards-card">
+                <i class="fas fa-layer-group"></i>
+                <span data-lang="flashcards">بطاقات</span>
+            </a>
+        </div>
+
+        <!-- قسم الفصول -->
+        <section class="home-section">
+            <h2 class="section-title"><i class="fas fa-book-open"></i> <span data-lang="chapters">الفصول</span></h2>
+            <div class="chapters-grid" id="chapters-grid">
+                <!-- سيتم تعبئتها بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- قسم الأجهزة -->
+        <section class="home-section">
+            <h2 class="section-title"><i class="fas fa-bone"></i> <span data-lang="systems">الأجهزة التشريحية</span></h2>
+            <div class="systems-preview" id="systems-preview">
+                <!-- سيتم تعبئتها بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- قسم الاختصارات السريعة -->
+        <section class="home-section">
+            <h2 class="section-title"><i class="fas fa-bolt"></i> <span data-lang="quick_abbreviations">اختصارات هامة</span></h2>
+            <div class="abbrev-preview" id="abbrev-preview">
+                <!-- سيتم تعبئتها بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- شريط التنقل السفلي -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span data-lang="home">الرئيسية</span>
+            </a>
+            <a href="pages/chapters.html" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span data-lang="chapters">الفصول</span>
+            </a>
+            <a href="pages/analyzer.html" class="nav-item">
+                <i class="fas fa-microscope"></i>
+                <span data-lang="analyzer">المحلل</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-search">
+                <i class="fas fa-search"></i>
+                <span data-lang="search">البحث</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-saved">
+                <i class="fas fa-star"></i>
+                <span data-lang="saved">المحفوظات</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- نافذة منبثقة للبحث السريع (اختياري) -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-lang="search">البحث</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="modal-search" class="modal-search-input" placeholder="اكتب كلمة البحث...">
+                <div id="modal-results" class="modal-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة اختبار سريع -->
+    <div id="quiz-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-lang="quick_quiz">اختبار سريع</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body" id="quiz-body">
+                <!-- سيتم تعبئتها بواسطة JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
