@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedTerm AI - الفصل 1</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <a href="../index.html" class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            <h1>الفصل 1: Word Parts</h1>
+            <div class="header-actions">
+                <button id="language-toggle" class="lang-btn">EN</button>
+            </div>
+        </header>
+
+        <div class="chapter-content">
+            <div class="chapter-section">
+                <h2>Word Roots</h2>
+                <div class="terms-list" id="roots-list">
+                    <!-- سيتم تعبئتها بواسطة JavaScript -->
+                </div>
+            </div>
+
+            <div class="chapter-section">
+                <h2>Prefixes</h2>
+                <div class="terms-list" id="prefixes-list">
+                    <!-- سيتم تعبئتها بواسطة JavaScript -->
+                </div>
+            </div>
+
+            <div class="chapter-section">
+                <h2>Suffixes</h2>
+                <div class="terms-list" id="suffixes-list">
+                    <!-- سيتم تعبئتها بواسطة JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>الرئيسية</span>
+            </a>
+            <a href="chapters.html" class="nav-item active">
+                <i class="fas fa-book"></i>
+                <span>الفصول</span>
+            </a>
+            <a href="analyzer.html" class="nav-item">
+                <i class="fas fa-microscope"></i>
+                <span>المحلل</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-search"></i>
+                <span>البحث</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-star"></i>
+                <span>المحفوظات</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="../app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // عرض محتوى الفصل من قاعدة البيانات
+            if (window.medTermAI) {
+                const prefixes = window.medTermAI.database.prefixes.slice(0, 10);
+                const roots = window.medTermAI.database.roots.slice(0, 15);
+                const suffixes = window.medTermAI.database.suffixes.slice(0, 15);
+                
+                const rootsList = document.getElementById('roots-list');
+                if (rootsList) {
+                    rootsList.innerHTML = roots.map(r => `
+                        <div class="term-item">
+                            <div class="term-main">${r.root}</div>
+                            <div class="term-meaning">${r.arabic} (${r.meaning})</div>
+                        </div>
+                    `).join('');
+                }
+                
+                const prefixesList = document.getElementById('prefixes-list');
+                if (prefixesList) {
+                    prefixesList.innerHTML = prefixes.map(p => `
+                        <div class="term-item">
+                            <div class="term-main">${p.prefix}</div>
+                            <div class="term-meaning">${p.arabic} (${p.meaning})</div>
+                        </div>
+                    `).join('');
+                }
+                
+                const suffixesList = document.getElementById('suffixes-list');
+                if (suffixesList) {
+                    suffixesList.innerHTML = suffixes.map(s => `
+                        <div class="term-item">
+                            <div class="term-main">${s.suffix}</div>
+                            <div class="term-meaning">${s.arabic} (${s.meaning})</div>
+                        </div>
+                    `).join('');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
