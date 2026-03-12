@@ -23,7 +23,6 @@
             padding-bottom: 80px;
         }
         
-        /* الهيدر */
         .header {
             background: white;
             padding: 15px 20px;
@@ -63,7 +62,6 @@
             gap: 5px;
         }
         
-        /* صندوق البحث */
         .search-box {
             background: white;
             border-radius: 30px;
@@ -89,7 +87,18 @@
             background: transparent;
         }
         
-        /* نتائج البحث */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+        }
+        
+        .loading i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #27ae60;
+        }
+        
         .search-results {
             background: white;
             border-radius: 15px;
@@ -126,7 +135,6 @@
             font-size: 16px;
         }
         
-        /* بطاقة التفاصيل */
         .detail-card {
             background: white;
             border-radius: 20px;
@@ -336,7 +344,6 @@
             margin: 3px;
         }
         
-        /* الشريط السفلي */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -383,10 +390,52 @@
             margin-top: 20px;
             font-size: 16px;
         }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+        
+        .card i {
+            font-size: 24px;
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+        
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .chapter-item {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+        
+        .chapter-number {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
-    <!-- الهيدر -->
     <div class="header">
         <div class="logo">
             <i class="fas fa-heartbeat"></i>
@@ -397,16 +446,50 @@
         </button>
     </div>
 
-    <!-- البحث -->
     <div class="search-box">
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" placeholder="ابحث عن مصطلح طبي..." autocomplete="off">
     </div>
 
-    <!-- المحتوى الرئيسي -->
-    <div id="mainContent"></div>
+    <div id="mainContent">
+        <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>جاري تحميل قاعدة البيانات...</p>
+        </div>
+    </div>
 
-    <!-- الشريط السفلي -->
+    <div class="grid-3" id="quickCards">
+        <div class="card" onclick="alert('قريباً')">
+            <i class="fas fa-microscope"></i>
+            <span>المحلل</span>
+        </div>
+        <div class="card" onclick="alert('قريباً')">
+            <i class="fas fa-question-circle"></i>
+            <span>اختبار</span>
+        </div>
+        <div class="card" onclick="alert('قريباً')">
+            <i class="fas fa-layer-group"></i>
+            <span>بطاقات</span>
+        </div>
+        <div class="card" onclick="alert('قريباً')">
+            <i class="fas fa-book"></i>
+            <span>الفصول</span>
+        </div>
+        <div class="card" onclick="alert('قريباً')">
+            <i class="fas fa-bone"></i>
+            <span>أجهزة</span>
+        </div>
+        <div class="card" onclick="alert('قريباً')">
+            <i class="fas fa-font"></i>
+            <span>اختصارات</span>
+        </div>
+    </div>
+
+    <h2 class="section-title" id="chaptersTitle">
+        <i class="fas fa-book-open"></i> الفصول الدراسية
+    </h2>
+    <div class="chapters-grid" id="chaptersList"></div>
+
     <div class="bottom-nav">
         <div class="nav-item active" onclick="showHome()">
             <i class="fas fa-home"></i>
@@ -420,139 +503,51 @@
             <i class="fas fa-microscope"></i>
             <span>المحلل</span>
         </div>
+        <div class="nav-item" onclick="focusSearch()">
+            <i class="fas fa-search"></i>
+            <span>البحث</span>
+        </div>
         <div class="nav-item" onclick="showSaved()">
             <i class="fas fa-star"></i>
-            <span>المحفوظات</span>
+            <span>محفوظات</span>
         </div>
     </div>
 
     <script>
-        // ==================== قاعدة البيانات الموسعة ====================
-        const terms = [
-            { 
-                id: 1, 
-                term: "myocarditis", 
-                arabic: "التهاب عضلة القلب", 
-                latin: "myocarditis",
-                pronunciation: "مايو-كار-داي-تس",
-                definition: "التهاب يصيب عضلة القلب نتيجة عدوى فيروسية أو بكتيرية",
-                
-                // تحليل الكلمة
-                parts: {
-                    prefix: { value: "myo", meaning: "عضلة", function: "يشير إلى العضلة" },
-                    root: { value: "card", meaning: "قلب", function: "يشير إلى القلب" },
-                    suffix: { value: "itis", meaning: "التهاب", function: "يشير إلى وجود التهاب" }
-                },
-                
-                // المعلومات التشريحية
-                system: "الجهاز القلبي الوعائي",
-                systemFunction: "ضخ الدم وتوزيعه في جميع أنحاء الجسم",
-                location: "يقع القلب في التجويف الصدري خلف عظم القص وبين الرئتين، مائلاً قليلاً إلى الجهة اليسرى",
-                nearbyOrgans: ["الرئتين", "القصبة الهوائية", "المريء", "الحجاب الحاجز", "الأبهر"],
-                
-                // الأمراض المرتبطة
-                diseases: [
-                    {
-                        name: "فشل القلب",
-                        symptoms: ["ضيق نفس", "تورم الأطراف", "إرهاق", "تسارع ضربات القلب"],
-                        treatments: ["مدرات البول", "مثبطات ACE", "حاصرات بيتا", "زراعة القلب في الحالات المتقدمة"]
-                    },
-                    {
-                        name: "اعتلال عضلة القلب",
-                        symptoms: ["ألم صدر", "دوخة", "إغماء", "عدم انتظام ضربات القلب"],
-                        treatments: ["أدوية تنظيم ضربات القلب", "جهاز تنظيم ضربات القلب", "زراعة القلب"]
-                    }
-                ],
-                
-                keywords: ["heart", "قلب", "عضلة", "التهاب", "عضلة القلب"]
-            },
-            
-            { 
-                id: 2, 
-                term: "hepatitis", 
-                arabic: "التهاب الكبد", 
-                latin: "hepatitis",
-                pronunciation: "هي-با-تاي-تس",
-                definition: "التهاب يصيب الكبد غالباً بسبب عدوى فيروسية",
-                
-                parts: {
-                    prefix: { value: "hepat", meaning: "كبد", function: "يشير إلى الكبد" },
-                    suffix: { value: "itis", meaning: "التهاب", function: "يشير إلى وجود التهاب" }
-                },
-                
-                system: "الجهاز الهضمي",
-                systemFunction: "هضم الطعام وامتصاص العناصر الغذائية والتخلص من السموم",
-                location: "يقع الكبد في الربع العلوي الأيمن من البطن، أسفل الحجاب الحاجز",
-                nearbyOrgans: ["المرارة", "المعدة", "الاثنا عشر", "البنكرياس", "القولون"],
-                
-                diseases: [
-                    {
-                        name: "التهاب الكبد الفيروسي A",
-                        symptoms: ["يرقان", "إرهاق", "غثيان", "ألم بطني", "حمى"],
-                        treatments: ["راحة", "تغذية جيدة", "سوائل", "الوقاية باللقاح"]
-                    },
-                    {
-                        name: "التهاب الكبد B",
-                        symptoms: ["اصفرار الجلد والعينين", "بول داكن", "ألم مفصلي", "غثيان"],
-                        treatments: ["مضادات فيروسية", "إنترفيرون", "زراعة الكبد في الحالات المتقدمة"]
-                    },
-                    {
-                        name: "التهاب الكبد C",
-                        symptoms: ["تعب مزمن", "ألم عضلي", "حمى خفيفة", "ضعف الشهية"],
-                        treatments: ["مضادات فيروسية مباشرة", "زراعة الكبد"]
-                    }
-                ],
-                
-                keywords: ["liver", "كبد", "التهاب", "فيروس"]
-            },
-            
-            { 
-                id: 3, 
-                term: "pneumonia", 
-                arabic: "التهاب رئوي", 
-                latin: "pneumonia",
-                pronunciation: "نيو-مو-نيا",
-                definition: "عدوى تسبب التهاباً في الحويصلات الهوائية في الرئتين",
-                
-                parts: {
-                    prefix: { value: "pneumon", meaning: "رئة", function: "يشير إلى الرئة" },
-                    suffix: { value: "ia", meaning: "حالة مرضية", function: "يشير إلى حالة مرضية" }
-                },
-                
-                system: "الجهاز التنفسي",
-                systemFunction: "تبادل الغازات (الأكسجين وثاني أكسيد الكربون) بين الدم والهواء",
-                location: "تقع الرئتان في التجويف الصدري، على جانبي القلب",
-                nearbyOrgans: ["القلب", "القصبة الهوائية", "الأضلاع", "الحجاب الحاجز"],
-                
-                diseases: [
-                    {
-                        name: "الالتهاب الرئوي الجرثومي",
-                        symptoms: ["حمى عالية", "قشعريرة", "سعال مع بلغم", "ألم صدر", "ضيق تنفس"],
-                        treatments: ["مضادات حيوية", "مسكنات ألم", "أكسجين", "سوائل وريدية"]
-                    },
-                    {
-                        name: "الالتهاب الرئوي الفيروسي",
-                        symptoms: ["حمى", "سعال جاف", "صداع", "ألم عضلي", "إرهاق"],
-                        treatments: ["مضادات فيروسية", "مسكنات", "راحة", "سوائل"]
-                    }
-                ],
-                
-                keywords: ["lung", "رئة", "التهاب", "pneumonia"]
-            }
-        ];
-
-        // المصطلحات المحفوظة
+        // ==================== المتغيرات العامة ====================
+        let terms = [];
         let savedTerms = JSON.parse(localStorage.getItem('savedTerms') || '[]');
-
-        // عناصر الصفحة
+        
         const mainContent = document.getElementById('mainContent');
         const searchInput = document.getElementById('searchInput');
+        const chaptersList = document.getElementById('chaptersList');
+
+        // ==================== تحميل قاعدة البيانات ====================
+        async function loadDatabase() {
+            try {
+                const response = await fetch('database.json');
+                const data = await response.json();
+                terms = data.terms;
+                showHome();
+                loadChapters();
+                console.log('✅ تم تحميل', terms.length, 'مصطلح');
+            } catch (error) {
+                console.error('❌ خطأ في تحميل قاعدة البيانات:', error);
+                mainContent.innerHTML = `
+                    <div class="search-results" style="text-align: center; padding: 40px;">
+                        <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #e74c3c;"></i>
+                        <p style="margin-top: 20px;">خطأ في تحميل قاعدة البيانات</p>
+                        <p style="color: #95a5a6;">تأكد من وجود ملف database.json</p>
+                    </div>
+                `;
+            }
+        }
 
         // ==================== عرض الصفحة الرئيسية ====================
         function showHome() {
             mainContent.innerHTML = `
                 <div class="search-results">
-                    <h3 style="margin-bottom: 15px; color: #2c3e50;">🔍 مصطلحات مقترحة</h3>
+                    <h3 style="margin-bottom: 15px; color: #2c3e50;">🔍 جميع المصطلحات (${terms.length})</h3>
                     ${terms.map(term => `
                         <div class="result-item" onclick="showTermDetail(${term.id})">
                             <div style="display: flex; justify-content: space-between;">
@@ -760,18 +755,10 @@
                 savedTerms.push(id);
             }
             localStorage.setItem('savedTerms', JSON.stringify(savedTerms));
-            showTermDetail(id); // إعادة تحميل الصفحة لتحديث الزر
+            showTermDetail(id);
         }
 
-        // ==================== دوال التنقل ====================
-        function showChapters() {
-            alert('📚 الفصول - قريباً');
-        }
-
-        function showAnalyzer() {
-            alert('🔬 المحلل الطبي - قريباً');
-        }
-
+        // ==================== عرض المحفوظات ====================
         function showSaved() {
             const saved = terms.filter(t => savedTerms.includes(t.id));
             if (saved.length === 0) {
@@ -799,13 +786,43 @@
             `;
         }
 
+        // ==================== تحميل الفصول ====================
+        function loadChapters() {
+            const chapters = [...new Set(terms.map(t => t.chapter || 1))].sort();
+            let html = '';
+            for (let i = 1; i <= 11; i++) {
+                const count = terms.filter(t => t.chapter === i).length;
+                html += `
+                    <div class="chapter-item" onclick="alert('الفصل ${i}: ${count} مصطلح')">
+                        <div class="chapter-number">${i}</div>
+                        <div>الفصل ${i}</div>
+                        <div style="font-size: 12px; color: #95a5a6;">${count} مصطلحات</div>
+                    </div>
+                `;
+            }
+            chaptersList.innerHTML = html;
+        }
+
+        // ==================== دوال مساعدة ====================
+        function showChapters() {
+            alert('📚 الفصول - قريباً');
+        }
+
+        function showAnalyzer() {
+            alert('🔬 المحلل الطبي - قريباً');
+        }
+
+        function focusSearch() {
+            searchInput.focus();
+        }
+
         // ==================== الأحداث ====================
         searchInput.addEventListener('input', (e) => {
             search(e.target.value);
         });
 
-        // ==================== التحميل الأولي ====================
-        showHome();
+        // ==================== بدء التحميل ====================
+        loadDatabase();
     </script>
 </body>
 </html>
