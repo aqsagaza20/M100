@@ -4,11 +4,291 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>MedTerm AI - منصة المصطلحات الطبية الذكية</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- البحث عن style.css في كل الأماكن الممكنة -->
+    <script>
+        // دالة للبحث عن الملفات
+        function findFile(filename, callback) {
+            const possiblePaths = [
+                filename,
+                'pages/' + filename,
+                'database/' + filename,
+                'lang/' + filename,
+                '../' + filename,
+                './' + filename,
+                '/' + filename
+            ];
+            
+            let found = false;
+            
+            function tryPath(index) {
+                if (found || index >= possiblePaths.length) return;
+                
+                const path = possiblePaths[index];
+                fetch(path, { method: 'HEAD' })
+                    .then(response => {
+                        if (response.ok) {
+                            found = true;
+                            callback(path);
+                        } else {
+                            tryPath(index + 1);
+                        }
+                    })
+                    .catch(() => tryPath(index + 1));
+            }
+            
+            tryPath(0);
+        }
+        
+        // تحميل style.css
+        findFile('style.css', function(path) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = path;
+            document.head.appendChild(link);
+        });
+    </script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* تصميم احتياطي مؤقت لحين تحميل style.css */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #2c3e50;
+        }
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo i {
+            font-size: 28px;
+            color: #27ae60;
+        }
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .lang-btn {
+            background: #f8f9fa;
+            border: none;
+            padding: 0 12px;
+            height: 40px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #2c3e50;
+        }
+        .search-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 30px;
+            outline: none;
+            background: white;
+        }
+        .search-input:focus {
+            border-color: #27ae60;
+        }
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .quick-card {
+            background: white;
+            padding: 16px 8px;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            color: #2c3e50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .quick-card i {
+            font-size: 24px;
+            color: #27ae60;
+        }
+        .home-section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #2c3e50;
+        }
+        .section-title i {
+            color: #27ae60;
+        }
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .chapter-item {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+        .chapter-number {
+            font-weight: 700;
+            color: #27ae60;
+            font-size: 14px;
+        }
+        .systems-preview {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 5px 0 15px;
+        }
+        .system-preview-card {
+            min-width: 140px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .system-preview-card i {
+            font-size: 30px;
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+        .abbrev-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .abbrev-badge {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #95a5a6;
+            font-size: 12px;
+            padding: 5px 0;
+            flex: 1;
+        }
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+        .nav-item.active {
+            color: #27ae60;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .modal-header {
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .close-modal {
+            font-size: 28px;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -19,12 +299,10 @@
                 <h1>MedTerm AI</h1>
             </div>
             <div class="header-actions">
-                <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
+                <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme" style="background:#f8f9fa; border:none; width:40px; height:40px; border-radius:50%;">
                     <i class="fas fa-moon"></i>
                 </button>
-                <button id="language-toggle" class="lang-btn" aria-label="Toggle language">
-                    EN
-                </button>
+                <button id="language-toggle" class="lang-btn">EN</button>
             </div>
         </header>
 
@@ -37,36 +315,13 @@
         </div>
 
         <!-- بطاقات الوصول السريع -->
-        <div class="quick-access">
-            <a href="pages/chapters.html" class="quick-card">
-                <i class="fas fa-book"></i>
-                <span data-lang="chapters">الفصول</span>
-            </a>
-            <a href="pages/analyzer.html" class="quick-card">
-                <i class="fas fa-microscope"></i>
-                <span data-lang="analyzer">المحلل</span>
-            </a>
-            <a href="#" class="quick-card" id="quiz-card">
-                <i class="fas fa-question-circle"></i>
-                <span data-lang="quiz">اختبار سريع</span>
-            </a>
-            <a href="pages/abbreviations.html" class="quick-card">
-                <i class="fas fa-font"></i>
-                <span data-lang="abbreviations">الاختصارات</span>
-            </a>
-            <a href="pages/systems.html" class="quick-card">
-                <i class="fas fa-bone"></i>
-                <span data-lang="systems">الأجهزة</span>
-            </a>
-            <a href="#" class="quick-card" id="flashcards-card">
-                <i class="fas fa-layer-group"></i>
-                <span data-lang="flashcards">بطاقات</span>
-            </a>
+        <div class="quick-access" id="quick-access">
+            <!-- سيتم تعبئتها بالجافاسكربت -->
         </div>
 
         <!-- قسم الفصول -->
         <section class="home-section">
-            <h2 class="section-title"><i class="fas fa-book-open"></i> <span data-lang="chapters">الفصول</span></h2>
+            <h2 class="section-title"><i class="fas fa-book-open"></i> <span>الفصول</span></h2>
             <div class="chapters-grid" id="chapters-grid">
                 <!-- سيتم تعبئتها بواسطة JavaScript -->
             </div>
@@ -74,7 +329,7 @@
 
         <!-- قسم الأجهزة -->
         <section class="home-section">
-            <h2 class="section-title"><i class="fas fa-bone"></i> <span data-lang="systems">الأجهزة التشريحية</span></h2>
+            <h2 class="section-title"><i class="fas fa-bone"></i> <span>الأجهزة التشريحية</span></h2>
             <div class="systems-preview" id="systems-preview">
                 <!-- سيتم تعبئتها بواسطة JavaScript -->
             </div>
@@ -82,46 +337,27 @@
 
         <!-- قسم الاختصارات السريعة -->
         <section class="home-section">
-            <h2 class="section-title"><i class="fas fa-bolt"></i> <span data-lang="quick_abbreviations">اختصارات هامة</span></h2>
+            <h2 class="section-title"><i class="fas fa-bolt"></i> <span>اختصارات هامة</span></h2>
             <div class="abbrev-preview" id="abbrev-preview">
                 <!-- سيتم تعبئتها بواسطة JavaScript -->
             </div>
         </section>
 
         <!-- شريط التنقل السفلي -->
-        <nav class="bottom-nav">
-            <a href="index.html" class="nav-item active">
-                <i class="fas fa-home"></i>
-                <span data-lang="home">الرئيسية</span>
-            </a>
-            <a href="pages/chapters.html" class="nav-item">
-                <i class="fas fa-book"></i>
-                <span data-lang="chapters">الفصول</span>
-            </a>
-            <a href="pages/analyzer.html" class="nav-item">
-                <i class="fas fa-microscope"></i>
-                <span data-lang="analyzer">المحلل</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-search">
-                <i class="fas fa-search"></i>
-                <span data-lang="search">البحث</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-saved">
-                <i class="fas fa-star"></i>
-                <span data-lang="saved">المحفوظات</span>
-            </a>
+        <nav class="bottom-nav" id="bottom-nav">
+            <!-- سيتم تعبئتها بالجافاسكربت -->
         </nav>
     </div>
 
-    <!-- نافذة منبثقة للبحث السريع (اختياري) -->
+    <!-- نافذة منبثقة للبحث السريع -->
     <div id="search-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-lang="search">البحث</h3>
+                <h3>البحث</h3>
                 <span class="close-modal">&times;</span>
             </div>
             <div class="modal-body">
-                <input type="text" id="modal-search" class="modal-search-input" placeholder="اكتب كلمة البحث...">
+                <input type="text" id="modal-search" class="modal-search-input" placeholder="اكتب كلمة البحث..." style="width:100%; padding:12px; border:2px solid #e9ecef; border-radius:10px; margin-bottom:15px;">
                 <div id="modal-results" class="modal-results"></div>
             </div>
         </div>
@@ -131,7 +367,7 @@
     <div id="quiz-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-lang="quick_quiz">اختبار سريع</h3>
+                <h3>اختبار سريع</h3>
                 <span class="close-modal">&times;</span>
             </div>
             <div class="modal-body" id="quiz-body">
@@ -140,6 +376,212 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        // ==================== البحث عن ملفات JavaScript ====================
+        function loadScript(url) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = url;
+                script.onload = resolve;
+                script.onerror = () => reject(new Error(`Failed to load ${url}`));
+                document.head.appendChild(script);
+            });
+        }
+
+        // محاولة تحميل app.js من عدة مسارات
+        async function loadAppJS() {
+            const possiblePaths = [
+                'app.js',
+                'pages/app.js',
+                'database/app.js',
+                'lang/app.js',
+                '../app.js',
+                './app.js',
+                '/app.js'
+            ];
+            
+            for (const path of possiblePaths) {
+                try {
+                    await loadScript(path);
+                    console.log('✅ تم تحميل app.js من:', path);
+                    return true;
+                } catch (e) {
+                    console.log('❌ فشل تحميل من:', path);
+                }
+            }
+            
+            console.error('❌ لم يتم العثور على app.js');
+            return false;
+        }
+
+        // تحميل app.js تلقائياً
+        loadAppJS();
+
+        // ==================== بيانات تجريبية في حال فشل تحميل قاعدة البيانات ====================
+        const fallbackData = {
+            chapters: [1,2,3,4,5,6,7,8,9,10,11],
+            systems: [
+                { id: 'skeletal', name: 'الجهاز الهيكلي', icon: 'bone' },
+                { id: 'cardiovascular', name: 'الجهاز القلبي', icon: 'heart' },
+                { id: 'respiratory', name: 'الجهاز التنفسي', icon: 'lungs' },
+                { id: 'digestive', name: 'الجهاز الهضمي', icon: 'stethoscope' },
+                { id: 'urinary', name: 'الجهاز البولي', icon: 'tint' }
+            ],
+            abbreviations: ['CNS', 'BP', 'ECG', 'MRI', 'CT', 'HIV', 'AIDS', 'COPD']
+        };
+
+        // ==================== تعبئة الصفحة ====================
+        function renderPage() {
+            // الفصول
+            const chaptersGrid = document.getElementById('chapters-grid');
+            if (chaptersGrid) {
+                chaptersGrid.innerHTML = '';
+                for (let i = 1; i <= 11; i++) {
+                    chaptersGrid.innerHTML += `
+                        <div class="chapter-item" onclick="window.location.href='pages/chapters.html?chapter=${i}'">
+                            <div class="chapter-number">${i}</div>
+                            <div class="chapter-title">الفصل ${i}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            // الأجهزة
+            const systemsPreview = document.getElementById('systems-preview');
+            if (systemsPreview) {
+                systemsPreview.innerHTML = '';
+                fallbackData.systems.forEach(sys => {
+                    systemsPreview.innerHTML += `
+                        <div class="system-preview-card" onclick="window.location.href='pages/systems.html?system=${sys.id}'">
+                            <i class="fas fa-${sys.icon}"></i>
+                            <span>${sys.name}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // الاختصارات
+            const abbrevPreview = document.getElementById('abbrev-preview');
+            if (abbrevPreview) {
+                abbrevPreview.innerHTML = '';
+                fallbackData.abbreviations.forEach(ab => {
+                    abbrevPreview.innerHTML += `
+                        <div class="abbrev-badge">${ab}</div>
+                    `;
+                });
+            }
+
+            // بطاقات الوصول السريع
+            const quickAccess = document.getElementById('quick-access');
+            if (quickAccess) {
+                quickAccess.innerHTML = `
+                    <a href="#" class="quick-card" onclick="findAndOpen('chapters.html')">
+                        <i class="fas fa-book"></i>
+                        <span>الفصول</span>
+                    </a>
+                    <a href="#" class="quick-card" onclick="findAndOpen('analyzer.html')">
+                        <i class="fas fa-microscope"></i>
+                        <span>المحلل</span>
+                    </a>
+                    <a href="#" class="quick-card" id="quiz-card">
+                        <i class="fas fa-question-circle"></i>
+                        <span>اختبار سريع</span>
+                    </a>
+                    <a href="#" class="quick-card" onclick="findAndOpen('abbreviations.html')">
+                        <i class="fas fa-font"></i>
+                        <span>الاختصارات</span>
+                    </a>
+                    <a href="#" class="quick-card" onclick="findAndOpen('systems.html')">
+                        <i class="fas fa-bone"></i>
+                        <span>الأجهزة</span>
+                    </a>
+                    <a href="#" class="quick-card" onclick="findAndOpen('flashcards.html')">
+                        <i class="fas fa-layer-group"></i>
+                        <span>بطاقات</span>
+                    </a>
+                `;
+            }
+
+            // شريط التنقل السفلي
+            const bottomNav = document.getElementById('bottom-nav');
+            if (bottomNav) {
+                bottomNav.innerHTML = `
+                    <a href="index.html" class="nav-item active">
+                        <i class="fas fa-home"></i>
+                        <span>الرئيسية</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="findAndOpen('chapters.html')">
+                        <i class="fas fa-book"></i>
+                        <span>الفصول</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="findAndOpen('analyzer.html')">
+                        <i class="fas fa-microscope"></i>
+                        <span>المحلل</span>
+                    </a>
+                    <a href="#" class="nav-item" id="nav-search">
+                        <i class="fas fa-search"></i>
+                        <span>البحث</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="findAndOpen('saved.html')">
+                        <i class="fas fa-star"></i>
+                        <span>المحفوظات</span>
+                    </a>
+                `;
+            }
+        }
+
+        // ==================== البحث عن الصفحات وفتحها ====================
+        window.findAndOpen = function(page) {
+            const possiblePaths = [
+                page,
+                'pages/' + page,
+                'database/' + page,
+                'lang/' + page,
+                '../' + page,
+                './' + page,
+                '/' + page
+            ];
+            
+            function tryOpen(index) {
+                if (index >= possiblePaths.length) {
+                    alert('لم يتم العثور على الصفحة: ' + page);
+                    return;
+                }
+                
+                const path = possiblePaths[index];
+                fetch(path, { method: 'HEAD' })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = path;
+                        } else {
+                            tryOpen(index + 1);
+                        }
+                    })
+                    .catch(() => tryOpen(index + 1));
+            }
+            
+            tryOpen(0);
+        };
+
+        // ==================== النوافذ المنبثقة ====================
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('close-modal') || e.target.classList.contains('modal')) {
+                document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        document.getElementById('quiz-card')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('quiz-modal').classList.add('active');
+        });
+
+        document.getElementById('nav-search')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('search-modal').classList.add('active');
+        });
+
+        // ==================== تشغيل الصفحة ====================
+        document.addEventListener('DOMContentLoaded', renderPage);
+    </script>
 </body>
 </html>
