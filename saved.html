@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedTerm AI - المصطلحات المحفوظة</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .saved-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .saved-term-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .saved-term-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .term-info h3 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .term-info p {
+            color: #27ae60;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .term-meta {
+            font-size: 14px;
+            color: #95a5a6;
+        }
+
+        .term-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #e74c3c;
+        }
+
+        .action-icon:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .action-icon.view:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .empty-saved {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #95a5a6;
+        }
+
+        .empty-saved i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #bdc3c7;
+        }
+
+        .btn-primary {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #2ecc71;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <a href="../index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 data-lang="saved">المصطلحات المحفوظة</h1>
+            <div class="header-actions">
+                <button id="language-toggle" class="lang-btn">EN</button>
+            </div>
+        </header>
+
+        <div class="saved-container">
+            <div class="stats-cards" id="stats-cards">
+                <!-- ستتم تعبئتها بالجافاسكربت -->
+            </div>
+
+            <div id="saved-terms-list">
+                <!-- ستتم تعبئتها بالجافاسكربت -->
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span data-lang="home">الرئيسية</span>
+            </a>
+            <a href="chapters.html" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span data-lang="chapters">الفصول</span>
+            </a>
+            <a href="analyzer.html" class="nav-item">
+                <i class="fas fa-microscope"></i>
+                <span data-lang="analyzer">المحلل</span>
+            </a>
+            <a href="flashcards.html" class="nav-item">
+                <i class="fas fa-layer-group"></i>
+                <span data-lang="flashcards">بطاقات</span>
+            </a>
+            <a href="saved.html" class="nav-item active">
+                <i class="fas fa-star"></i>
+                <span data-lang="saved">المحفوظات</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="../app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function loadSavedTerms() {
+                if (!window.medTermAI) return;
+                
+                const savedTerms = window.medTermAI.getSavedTerms?.() || [];
+                const stats = window.medTermAI.getProgressStats?.() || {
+                    savedCount: 0,
+                    quizzesTaken: 0,
+                    averageScore: 0
+                };
+                
+                // عرض الإحصائيات
+                const statsHtml = `
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.savedCount}</div>
+                        <div class="stat-label">مصطلح محفوظ</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.quizzesTaken}</div>
+                        <div class="stat-label">اختبار تم</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.averageScore}%</div>
+                        <div class="stat-label">متوسط النتيجة</div>
+                    </div>
+                `;
+                document.getElementById('stats-cards').innerHTML = statsHtml;
+                
+                // عرض المصطلحات المحفوظة
+                if (savedTerms.length === 0) {
+                    document.getElementById('saved-terms-list').innerHTML = `
+                        <div class="empty-saved">
+                            <i class="far fa-star"></i>
+                            <h3>لا توجد مصطلحات محفوظة</h3>
+                            <p>قم بحفظ المصطلحات المهمة لمراجعتها لاحقاً</p>
+                            <a href="../index.html" class="btn-primary">
+                                <i class="fas fa-search"></i> استعرض المصطلحات
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let termsHtml = '';
+                savedTerms.forEach(term => {
+                    termsHtml += `
+                        <div class="saved-term-item" data-term-id="${term.id}">
+                            <div class="term-info">
+                                <h3>${term.term}</h3>
+                                <p>${term.arabic}</p>
+                                <div class="term-meta">
+                                    <span>الفصل ${term.chapter || '?'}</span>
+                                    ${term.system ? ` · ${term.system}` : ''}
+                                </div>
+                            </div>
+                            <div class="term-actions">
+                                <div class="action-icon view" onclick="window.location.href='term.html?id=${term.id}'">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="action-icon" onclick="removeTerm(${term.id})">
+                                    <i class="fas fa-trash"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('saved-terms-list').innerHTML = termsHtml;
+            }
+            
+            window.removeTerm = function(termId) {
+                if (window.medTermAI) {
+                    window.medTermAI.removeSavedTerm(termId);
+                    loadSavedTerms(); // إعادة تحميل الصفحة
+                }
+            };
+            
+            // تحميل أولي
+            setTimeout(loadSavedTerms, 500);
+        });
+    </script>
+</body>
+</html>
