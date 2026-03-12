@@ -525,19 +525,33 @@
         // ==================== تحميل قاعدة البيانات ====================
         async function loadDatabase() {
             try {
+                // ✅ تغيير المسار إلى database/database.json
                 const response = await fetch('database.json');
-                const data = await response.json();
-                terms = data.terms;
-                showHome();
-                loadChapters();
-                console.log('✅ تم تحميل', terms.length, 'مصطلح');
+                
+                if (!response.ok) {
+                    throw new Error(`الملف غير موجود (${response.status})`);
+                }
+                
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    terms = data.terms;
+                    showHome();
+                    loadChapters();
+                    console.log('✅ تم تحميل', terms.length, 'مصطلح');
+                } catch (jsonError) {
+                    throw new Error('خطأ في تنسيق JSON: ' + jsonError.message);
+                }
+                
             } catch (error) {
-                console.error('❌ خطأ في تحميل قاعدة البيانات:', error);
+                console.error('❌ خطأ:', error);
                 mainContent.innerHTML = `
                     <div class="search-results" style="text-align: center; padding: 40px;">
                         <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #e74c3c;"></i>
                         <p style="margin-top: 20px;">خطأ في تحميل قاعدة البيانات</p>
-                        <p style="color: #95a5a6;">تأكد من وجود ملف database.json</p>
+                        <p style="color: #95a5a6;">${error.message}</p>
+                        <p style="color: #95a5a6; margin-top: 10px;">تأكد من وجود ملف database.json في مجلد database/</p>
                     </div>
                 `;
             }
@@ -545,10 +559,20 @@
 
         // ==================== عرض الصفحة الرئيسية ====================
         function showHome() {
+            if (!terms || terms.length === 0) {
+                mainContent.innerHTML = `
+                    <div class="search-results" style="text-align: center; padding: 40px;">
+                        <i class="fas fa-database" style="font-size: 48px; color: #95a5a6;"></i>
+                        <p>لا توجد بيانات</p>
+                    </div>
+                `;
+                return;
+            }
+            
             mainContent.innerHTML = `
                 <div class="search-results">
                     <h3 style="margin-bottom: 15px; color: #2c3e50;">🔍 جميع المصطلحات (${terms.length})</h3>
-                    ${terms.map(term => `
+                    ${terms.slice(0, 20).map(term => `
                         <div class="result-item" onclick="showTermDetail(${term.id})">
                             <div style="display: flex; justify-content: space-between;">
                                 <div class="result-term">${term.term}</div>
@@ -557,6 +581,7 @@
                             <div style="color: #7f8c8d; margin-top: 5px;">${term.definition.substring(0, 50)}...</div>
                         </div>
                     `).join('')}
+                    ${terms.length > 20 ? '<p style="text-align: center; margin-top: 15px;">وعشرات المصطلحات الأخرى...</p>' : ''}
                 </div>
             `;
         }
@@ -578,7 +603,7 @@
                             <div class="part-type">بادئة (Prefix)</div>
                             <div class="part-value">${term.parts.prefix.value}</div>
                             <div class="part-meaning">${term.parts.prefix.meaning}</div>
-                            <div style="font-size: 12px; margin-top: 10px;">${term.parts.prefix.function}</div>
+                            <div style="font-size: 12px; margin-top: 10px;">${term.parts.prefix.function || ''}</div>
                         </div>
                     `;
                 }
@@ -589,7 +614,7 @@
                             <div class="part-type">جذر (Root)</div>
                             <div class="part-value">${term.parts.root.value}</div>
                             <div class="part-meaning">${term.parts.root.meaning}</div>
-                            <div style="font-size: 12px; margin-top: 10px;">${term.parts.root.function}</div>
+                            <div style="font-size: 12px; margin-top: 10px;">${term.parts.root.function || ''}</div>
                         </div>
                     `;
                 }
@@ -600,7 +625,7 @@
                             <div class="part-type">لاحقة (Suffix)</div>
                             <div class="part-value">${term.parts.suffix.value}</div>
                             <div class="part-meaning">${term.parts.suffix.meaning}</div>
-                            <div style="font-size: 12px; margin-top: 10px;">${term.parts.suffix.function}</div>
+                            <div style="font-size: 12px; margin-top: 10px;">${term.parts.suffix.function || ''}</div>
                         </div>
                     `;
                 }
@@ -609,7 +634,7 @@
             }
 
             let diseasesHtml = '';
-            if (term.diseases) {
+            if (term.diseases && term.diseases.length > 0) {
                 diseasesHtml = '<div style="margin-top: 30px;">';
                 term.diseases.forEach(disease => {
                     diseasesHtml += `
@@ -618,13 +643,13 @@
                             <div style="margin: 15px 0;">
                                 <strong>الأعراض:</strong>
                                 <div class="symptoms">
-                                    ${disease.symptoms.map(s => `<span class="symptom-tag">${s}</span>`).join('')}
+                                    ${disease.symptoms ? disease.symptoms.map(s => `<span class="symptom-tag">${s}</span>`).join('') : ''}
                                 </div>
                             </div>
                             <div>
                                 <strong>العلاج:</strong>
                                 <div style="margin-top: 10px;">
-                                    ${disease.treatments.map(t => `<span class="treatment-tag">${t}</span>`).join('')}
+                                    ${disease.treatments ? disease.treatments.map(t => `<span class="treatment-tag">${t}</span>`).join('') : ''}
                                 </div>
                             </div>
                         </div>
@@ -646,11 +671,11 @@
                     </div>
 
                     <div class="pronunciation">
-                        <i class="fas fa-microphone"></i> النطق: ${term.pronunciation}
+                        <i class="fas fa-microphone"></i> النطق: ${term.pronunciation || 'غير متوفر'}
                     </div>
 
                     <div class="latin-term">
-                        <i class="fas fa-scroll"></i> الاسم اللاتيني: ${term.latin}
+                        <i class="fas fa-scroll"></i> الاسم اللاتيني: ${term.latin || term.term}
                     </div>
 
                     <div style="line-height: 1.8; margin: 20px 0;">
@@ -660,7 +685,7 @@
                     <h3 class="section-title">
                         <i class="fas fa-puzzle-piece"></i> تحليل المصطلح
                     </h3>
-                    ${partsHtml}
+                    ${partsHtml || '<p style="color: #95a5a6;">لا يوجد تحليل متاح</p>'}
 
                     <h3 class="section-title">
                         <i class="fas fa-heartbeat"></i> معلومات الجهاز
@@ -669,23 +694,23 @@
                         <div class="info-grid">
                             <div class="info-item">
                                 <div class="info-label">الجهاز</div>
-                                <div class="info-value">${term.system}</div>
+                                <div class="info-value">${term.system || 'غير محدد'}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">وظيفة الجهاز</div>
-                                <div class="info-value">${term.systemFunction}</div>
+                                <div class="info-value">${term.systemFunction || 'غير محدد'}</div>
                             </div>
                         </div>
                         
                         <div style="margin: 20px 0;">
                             <strong>📍 الموقع التشريحي:</strong>
-                            <div class="location-text">${term.location}</div>
+                            <div class="location-text">${term.location || 'غير محدد'}</div>
                         </div>
 
                         <div>
                             <strong>🫁 الأعضاء المجاورة:</strong>
                             <div class="nearby-organs">
-                                ${term.nearbyOrgans.map(organ => `<span class="organ-tag">${organ}</span>`).join('')}
+                                ${term.nearbyOrgans ? term.nearbyOrgans.map(organ => `<span class="organ-tag">${organ}</span>`).join('') : '<span class="organ-tag">غير محدد</span>'}
                             </div>
                         </div>
                     </div>
@@ -693,7 +718,7 @@
                     <h3 class="section-title">
                         <i class="fas fa-disease"></i> الأمراض المرتبطة
                     </h3>
-                    ${diseasesHtml}
+                    ${diseasesHtml || '<p style="color: #95a5a6;">لا توجد أمراض مرتبطة</p>'}
 
                     <button class="back-button" onclick="showHome()">
                         <i class="fas fa-arrow-right"></i> عودة للرئيسية
@@ -715,7 +740,7 @@
                 return (
                     term.term.toLowerCase().includes(query) ||
                     term.arabic.includes(query) ||
-                    (term.keywords && term.keywords.some(k => k.includes(query)))
+                    (term.keywords && term.keywords.some(k => k && k.includes(query)))
                 );
             });
 
@@ -734,7 +759,7 @@
             mainContent.innerHTML = `
                 <div class="search-results">
                     <h3 style="margin-bottom: 15px;">نتائج البحث عن "${query}" (${results.length})</h3>
-                    ${results.map(term => `
+                    ${results.slice(0, 20).map(term => `
                         <div class="result-item" onclick="showTermDetail(${term.id})">
                             <div style="display: flex; justify-content: space-between;">
                                 <div class="result-term">${term.term}</div>
@@ -743,6 +768,7 @@
                             <div style="color: #7f8c8d; margin-top: 5px;">${term.definition.substring(0, 60)}...</div>
                         </div>
                     `).join('')}
+                    ${results.length > 20 ? '<p style="text-align: center; margin-top: 15px;">و' + (results.length - 20) + ' نتائج أخرى...</p>' : ''}
                 </div>
             `;
         }
@@ -788,7 +814,11 @@
 
         // ==================== تحميل الفصول ====================
         function loadChapters() {
-            const chapters = [...new Set(terms.map(t => t.chapter || 1))].sort();
+            if (!terms || terms.length === 0) {
+                chaptersList.innerHTML = '<p style="color: #95a5a6;">لا توجد بيانات</p>';
+                return;
+            }
+            
             let html = '';
             for (let i = 1; i <= 11; i++) {
                 const count = terms.filter(t => t.chapter === i).length;
