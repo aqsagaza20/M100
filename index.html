@@ -3,29 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedTerm AI</title>
-    
-    <!-- Font Awesome مباشرة من CDN -->
+    <title>MedTerm AI - البحث الذكي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', Tahoma, Arial, sans-serif;
+            font-family: system-ui, 'Segoe UI', Tahoma, Arial, sans-serif;
         }
-        
         body {
-            background: #f0f2f5;
-            color: #1e2a3a;
-            padding: 16px;
+            background: #f8fafc;
+            padding: 20px;
             padding-bottom: 80px;
         }
-        
         .header {
             background: white;
-            padding: 15px 20px;
+            padding: 15px;
             border-radius: 15px;
             display: flex;
             justify-content: space-between;
@@ -33,32 +27,15 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
         .logo {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
         .logo i {
             color: #27ae60;
             font-size: 28px;
         }
-        
-        .logo h1 {
-            font-size: 22px;
-            font-weight: 600;
-        }
-        
-        .lang-btn {
-            background: #f0f2f5;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
         .search-box {
             background: white;
             border-radius: 30px;
@@ -68,12 +45,11 @@
             align-items: center;
             gap: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 2px solid #e9ecef;
         }
-        
         .search-box i {
             color: #95a5a6;
         }
-        
         .search-box input {
             border: none;
             outline: none;
@@ -81,102 +57,40 @@
             font-size: 16px;
             background: transparent;
         }
-        
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-        
-        .card {
+        .search-results {
             background: white;
-            padding: 20px 10px;
             border-radius: 15px;
-            text-align: center;
-            text-decoration: none;
-            color: #1e2a3a;
+            padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
+            margin-top: 10px;
+            display: none;
         }
-        
-        .card i {
-            font-size: 28px;
-            color: #27ae60;
-        }
-        
-        .section-title {
-            font-size: 18px;
-            margin: 20px 0 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .section-title i {
-            color: #27ae60;
-        }
-        
-        .chapters-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        
-        .chapter-item {
-            background: white;
+        .result-item {
             padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 1px solid #e9ecef;
             cursor: pointer;
+            transition: background 0.2s;
         }
-        
-        .chapter-number {
-            color: #27ae60;
-            font-weight: bold;
+        .result-item:hover {
+            background: #f8fafc;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-term {
             font-size: 18px;
-        }
-        
-        .systems-scroll {
-            display: flex;
-            overflow-x: auto;
-            gap: 12px;
-            padding: 5px 0 15px;
-        }
-        
-        .system-card {
-            min-width: 130px;
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .system-card i {
-            font-size: 32px;
-            color: #27ae60;
-            margin-bottom: 8px;
-        }
-        
-        .abbrev-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .abbrev-item {
-            background: white;
-            padding: 8px 16px;
-            border-radius: 30px;
             font-weight: 600;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            color: #2c3e50;
         }
-        
+        .result-arabic {
+            color: #27ae60;
+            margin-top: 5px;
+        }
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #95a5a6;
+        }
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -190,7 +104,6 @@
             border-top-right-radius: 20px;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
-        
         .nav-item {
             display: flex;
             flex-direction: column;
@@ -200,62 +113,12 @@
             font-size: 12px;
             flex: 1;
         }
-        
         .nav-item i {
             font-size: 20px;
             margin-bottom: 3px;
         }
-        
         .nav-item.active {
             color: #27ae60;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        
-        .modal-header {
-            background: #2c3e50;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .close {
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        .modal-body {
-            padding: 20px;
-        }
-        
-        .error-message {
-            color: #e74c3c;
-            text-align: center;
-            padding: 20px;
         }
     </style>
 </head>
@@ -265,63 +128,19 @@
             <i class="fas fa-heartbeat"></i>
             <h1>MedTerm AI</h1>
         </div>
-        <button class="lang-btn" onclick="toggleLang()">EN</button>
+        <span style="color:#27ae60;">🔍 البحث</span>
     </div>
 
     <div class="search-box">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="ابحث عن مصطلح، جهاز، اختصار...">
+        <input type="text" id="searchInput" placeholder="ابحث عن مصطلح طبي..." autofocus>
     </div>
 
-    <div class="grid-3">
-        <div class="card" onclick="openPage('chapters')">
-            <i class="fas fa-book"></i>
-            <span>الفصول</span>
+    <div class="search-results" id="searchResults">
+        <div class="no-results">
+            <i class="fas fa-search" style="font-size: 40px; margin-bottom: 10px;"></i>
+            <p>ابدأ بالكتابة للبحث...</p>
         </div>
-        <div class="card" onclick="openPage('analyzer')">
-            <i class="fas fa-microscope"></i>
-            <span>المحلل</span>
-        </div>
-        <div class="card" onclick="openQuiz()">
-            <i class="fas fa-question-circle"></i>
-            <span>اختبار</span>
-        </div>
-        <div class="card" onclick="openPage('abbreviations')">
-            <i class="fas fa-font"></i>
-            <span>اختصارات</span>
-        </div>
-        <div class="card" onclick="openPage('systems')">
-            <i class="fas fa-bone"></i>
-            <span>أجهزة</span>
-        </div>
-        <div class="card" onclick="openPage('flashcards')">
-            <i class="fas fa-layer-group"></i>
-            <span>بطاقات</span>
-        </div>
-    </div>
-
-    <h2 class="section-title">
-        <i class="fas fa-book-open"></i>
-        الفصول
-    </h2>
-    <div class="chapters-grid" id="chaptersList">
-        <!-- ستتعبأ تلقائياً -->
-    </div>
-
-    <h2 class="section-title">
-        <i class="fas fa-bone"></i>
-        الأجهزة
-    </h2>
-    <div class="systems-scroll" id="systemsList">
-        <!-- ستتعبأ تلقائياً -->
-    </div>
-
-    <h2 class="section-title">
-        <i class="fas fa-bolt"></i>
-        اختصارات هامة
-    </h2>
-    <div class="abbrev-container" id="abbrevList">
-        <!-- ستتعبأ تلقائياً -->
     </div>
 
     <div class="bottom-nav">
@@ -329,203 +148,122 @@
             <i class="fas fa-home"></i>
             <span>الرئيسية</span>
         </a>
-        <a href="#" class="nav-item" onclick="openPage('chapters'); return false;">
+        <a href="#" class="nav-item" onclick="alert('قريباً...'); return false;">
             <i class="fas fa-book"></i>
             <span>الفصول</span>
         </a>
-        <a href="#" class="nav-item" onclick="openPage('analyzer'); return false;">
+        <a href="#" class="nav-item" onclick="alert('قريباً...'); return false;">
             <i class="fas fa-microscope"></i>
             <span>المحلل</span>
         </a>
-        <a href="#" class="nav-item" onclick="openSearch(); return false;">
-            <i class="fas fa-search"></i>
-            <span>البحث</span>
-        </a>
-        <a href="#" class="nav-item" onclick="openPage('saved'); return false;">
+        <a href="#" class="nav-item" onclick="alert('قريباً...'); return false;">
             <i class="fas fa-star"></i>
-            <span>محفوظات</span>
+            <span>المفضلة</span>
         </a>
-    </div>
-
-    <!-- نوافذ منبثقة -->
-    <div id="searchModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>البحث</h3>
-                <span class="close" onclick="closeModal('searchModal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="modalSearch" placeholder="اكتب كلمة البحث..." style="width:100%; padding:10px; margin-bottom:15px; border:2px solid #e9ecef; border-radius:8px;">
-                <div id="searchResults"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="quizModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>اختبار سريع</h3>
-                <span class="close" onclick="closeModal('quizModal')">&times;</span>
-            </div>
-            <div class="modal-body" id="quizBody">
-                <p>جاري تحميل الأسئلة...</p>
-            </div>
-        </div>
     </div>
 
     <script>
-        // بيانات تجريبية
-        const data = {
-            chapters: [1,2,3,4,5,6,7,8,9,10,11],
-            systems: [
-                {name: 'الهيكلي', icon: 'bone'},
-                {name: 'القلب', icon: 'heart'},
-                {name: 'التنفسي', icon: 'lungs'},
-                {name: 'الهضمي', icon: 'stethoscope'},
-                {name: 'البولي', icon: 'tint'},
-                {name: 'العصبي', icon: 'brain'}
-            ],
-            abbreviations: ['CNS','BP','ECG','MRI','CT','HIV','AIDS','COPD','ICU','CPR']
-        };
+        // قاعدة بيانات المصطلحات (سنوسعها لاحقاً)
+        const terms = [
+            { id: 1, term: "myocarditis", arabic: "التهاب عضلة القلب", definition: "Inflammation of heart muscle" },
+            { id: 2, term: "osteoporosis", arabic: "هشاشة العظام", definition: "Condition of porous bones" },
+            { id: 3, term: "gastroenteritis", arabic: "التهاب المعدة والأمعاء", definition: "Inflammation of stomach and intestines" },
+            { id: 4, term: "nephrolithiasis", arabic: "حصى الكلى", definition: "Presence of kidney stones" },
+            { id: 5, term: "hyperthyroidism", arabic: "فرط نشاط الغدة الدرقية", definition: "Overactive thyroid" },
+            { id: 6, term: "pneumonia", arabic: "التهاب رئوي", definition: "Infection of the lungs" },
+            { id: 7, term: "leukemia", arabic: "ابيضاض الدم", definition: "Cancer of blood-forming tissues" },
+            { id: 8, term: "arthritis", arabic: "التهاب المفاصل", definition: "Inflammation of joints" },
+            { id: 9, term: "hepatitis", arabic: "التهاب الكبد", definition: "Inflammation of liver" },
+            { id: 10, term: "cystitis", arabic: "التهاب المثانة", definition: "Inflammation of bladder" }
+        ];
 
-        // تعبئة الصفحة
-        function loadPage() {
-            // الفصول
-            const chaptersDiv = document.getElementById('chaptersList');
-            chaptersDiv.innerHTML = '';
-            data.chapters.forEach(ch => {
-                chaptersDiv.innerHTML += `
-                    <div class="chapter-item" onclick="alert('الفصل ${ch} - قريباً')">
-                        <div class="chapter-number">${ch}</div>
-                        <div>الفصل ${ch}</div>
+        // عناصر الصفحة
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        // دالة البحث
+        function search(query) {
+            if (!query || query.length < 2) {
+                searchResults.style.display = 'block';
+                searchResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search" style="font-size: 40px; margin-bottom: 10px;"></i>
+                        <p>اكتب حرفين على الأقل للبحث</p>
                     </div>
                 `;
-            });
-
-            // الأجهزة
-            const systemsDiv = document.getElementById('systemsList');
-            systemsDiv.innerHTML = '';
-            data.systems.forEach(sys => {
-                systemsDiv.innerHTML += `
-                    <div class="system-card" onclick="alert('${sys.name} - قريباً')">
-                        <i class="fas fa-${sys.icon}"></i>
-                        <div>${sys.name}</div>
-                    </div>
-                `;
-            });
-
-            // الاختصارات
-            const abbrevDiv = document.getElementById('abbrevList');
-            abbrevDiv.innerHTML = '';
-            data.abbreviations.forEach(ab => {
-                abbrevDiv.innerHTML += `<span class="abbrev-item">${ab}</span>`;
-            });
-        }
-
-        // فتح الصفحات
-        function openPage(page) {
-            const pages = {
-                'chapters': 'chapter1.html',
-                'analyzer': 'analyzer.html',
-                'abbreviations': 'abbreviations.html',
-                'systems': 'systems.html',
-                'flashcards': 'flashcards.html',
-                'saved': 'saved.html'
-            };
-            
-            const filename = pages[page];
-            if (!filename) {
-                alert('الصفحة غير متوفرة حالياً');
                 return;
             }
+
+            query = query.toLowerCase();
             
-            // محاولة فتح الملف من مسارات مختلفة
-            const paths = [
-                filename,
-                'pages/' + filename,
-                './' + filename,
-                '/' + filename
-            ];
+            // البحث في المصطلحات
+            const results = terms.filter(term => 
+                term.term.toLowerCase().includes(query) || 
+                term.arabic.includes(query)
+            );
+
+            // عرض النتائج
+            searchResults.style.display = 'block';
             
-            let found = false;
-            for (const path of paths) {
-                fetch(path, { method: 'HEAD' })
-                    .then(res => {
-                        if (res.ok && !found) {
-                            found = true;
-                            window.location.href = path;
-                        }
-                    })
-                    .catch(() => {});
+            if (results.length === 0) {
+                searchResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-frown" style="font-size: 40px; margin-bottom: 10px;"></i>
+                        <p>لا توجد نتائج لـ "${query}"</p>
+                    </div>
+                `;
+                return;
             }
+
+            let html = '';
+            results.forEach(term => {
+                html += `
+                    <div class="result-item" onclick="showTerm(${term.id})">
+                        <div class="result-term">${term.term}</div>
+                        <div class="result-arabic">${term.arabic}</div>
+                        <div style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">${term.definition}</div>
+                    </div>
+                `;
+            });
             
-            setTimeout(() => {
-                if (!found) {
-                    alert('الملف غير موجود. سيتم فتحه قريباً');
-                }
-            }, 500);
+            searchResults.innerHTML = html;
         }
 
-        // فتح نافذة البحث
-        function openSearch() {
-            document.getElementById('searchModal').classList.add('active');
+        // عرض تفاصيل المصطلح
+        function showTerm(id) {
+            const term = terms.find(t => t.id === id);
+            if (term) {
+                searchResults.innerHTML = `
+                    <div style="padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                            <h2 style="color: #2c3e50;">${term.term}</h2>
+                            <i class="far fa-star" style="font-size: 24px; color: #f1c40f; cursor: pointer;" onclick="alert('سيتم إضافة الحفظ قريباً')"></i>
+                        </div>
+                        <div style="font-size: 20px; color: #27ae60; margin-bottom: 15px;">${term.arabic}</div>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 10px; line-height: 1.8;">
+                            <strong>التعريف:</strong> ${term.definition}
+                        </div>
+                        <div style="margin-top: 20px; text-align: left;">
+                            <button onclick="searchInput.value=''; search(''); searchInput.focus();" style="background: #e9ecef; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer;">
+                                <i class="fas fa-arrow-right"></i> عودة للبحث
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
         }
 
-        // فتح نافذة الاختبار
-        function openQuiz() {
-            document.getElementById('quizModal').classList.add('active');
-            document.getElementById('quizBody').innerHTML = `
-                <div style="text-align:center; padding:20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size:40px; color:#27ae60;"></i>
-                    <p>جاري تجهيز الأسئلة...</p>
-                </div>
-            `;
-        }
+        // الاستماع للكتابة
+        searchInput.addEventListener('input', (e) => {
+            search(e.target.value);
+        });
 
-        // إغلاق النوافذ
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        // تبديل اللغة
-        function toggleLang() {
-            alert('سيتم إضافة دعم اللغات قريباً');
-        }
-
-        // البحث
-        document.getElementById('searchInput')?.addEventListener('input', function(e) {
-            if (e.target.value.length > 2) {
-                document.getElementById('searchModal').classList.add('active');
-                document.getElementById('modalSearch').value = e.target.value;
+        // البحث عند الضغط على Enter
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
                 search(e.target.value);
             }
         });
-
-        function search(query) {
-            const results = document.getElementById('searchResults');
-            results.innerHTML = `
-                <div style="text-align:center; padding:10px;">
-                    <i class="fas fa-spinner fa-spin"></i> جاري البحث...
-                </div>
-            `;
-            setTimeout(() => {
-                results.innerHTML = `
-                    <div style="padding:10px; border-bottom:1px solid #eee;">النتيجة 1</div>
-                    <div style="padding:10px; border-bottom:1px solid #eee;">النتيجة 2</div>
-                    <div style="padding:10px;">النتيجة 3</div>
-                `;
-            }, 1000);
-        }
-
-        // إغلاق النوافذ عند النقر خارجها
-        window.onclick = function(e) {
-            if (e.target.classList.contains('modal')) {
-                e.target.classList.remove('active');
-            }
-        };
-
-        // تحميل الصفحة
-        loadPage();
     </script>
 </body>
 </html>
