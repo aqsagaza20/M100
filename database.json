@@ -5,11 +5,11 @@
       "term": "cyanosis",
       "arabic": "زراق",
       "latin": "cyanosis",
-      "pronunciation": "ساي-أ-نو-سيس",
-      "definition": "ازرقاق الجلد والأغشية المخاطية نتيجة نقص الأكسجين في الدم",
+      "pronunciation": "ساي-أ-نو-سيس",  
+      "definition": "ازرقاق الجلد والأغشية المخاطية نتيجة نقص الأكسجين في الدم", 
       "parts": {
-        "root": { "value": "cyan", "meaning": "أزرق", "function": "يشير إلى اللون الأزرق" },
-        "suffix": { "value": "osis", "meaning": "حالة مرضية", "function": "يشير إلى وجود حالة غير طبيعية" }
+        "root": { "value": "cyan", "meaning": "أزرق" },
+        "suffix": { "value": "osis", "meaning": "حالة مرضية" }
       },
       "system": "الجهاز الدوراني والتنفسي",
       "systemFunction": "نقل الأكسجين وثاني أكسيد الكربون",
@@ -30,6 +30,7 @@
       "keywords": ["blue", "أزرق", "cyanosis", "زراق", "نقص أكسجين"],
       "chapter": 1
     },
+    // ... باقي المصطلحات ...
     {
       "id": 2,
       "term": "erythrocyte",
@@ -12068,21 +12069,21 @@
         "keywords": ["semi", "نصف"],
         "chapter": 11
       },
-      {
-        "id": 551,
-        "term": "stat",
-        "arabic": "فوراً",
-        "latin": "statim",
-        "pronunciation": "ستات",
-        "definition": "تعليمات طبية لتنفيذ أمر ما فوراً",
-        "parts": {},
-        "system": "عام",
-        "systemFunction": "إشارة للسرعة",
-        "location": "",
-        "nearbyOrgans": [],
-        "diseases": [],
-        "keywords": ["stat", "immediately", "فوراً"],
-        "chapter": 11
-      }
-  ]
+    {
+      "id": 551,
+      "term": "stat",
+      "arabic": "فوراً",
+      "latin": "statim",
+      "pronunciation": "ستات",
+      "definition": "تعليمات طبية لتنفيذ أمر ما فوراً",
+      "parts": {},
+      "system": "عام",
+      "systemFunction": "إشارة للسرعة",
+      "location": "",
+      "nearbyOrgans": [],
+      "diseases": [],
+      "keywords": ["stat", "immediately", "فوراً"],
+      "chapter": 11
+    }
+  ] 
 }
