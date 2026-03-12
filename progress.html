@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedTerm AI - تقدم التعلم</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .progress-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .summary-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .summary-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .progress-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .progress-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f9ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: #27ae60;
+            font-size: 24px;
+        }
+
+        .progress-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .progress-bar-container {
+            background: #f8f9fa;
+            height: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #27ae60;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        .recent-activity {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f9ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #27ae60;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .activity-meta {
+            font-size: 12px;
+            color: #95a5a6;
+        }
+
+        .activity-score {
+            font-weight: 700;
+            color: #27ae60;
+        }
+
+        .chapters-progress {
+            margin-top: 30px;
+        }
+
+        .chapter-progress-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chapter-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e74c3c;
+        }
+
+        .chapter-status.completed {
+            background: #27ae60;
+        }
+
+        .chapter-name {
+            flex: 1;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <a href="../index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 data-lang="progress">تقدم التعلم</h1>
+            <div class="header-actions">
+                <button id="language-toggle" class="lang-btn">EN</button>
+            </div>
+        </header>
+
+        <div class="progress-container">
+            <div class="summary-card" id="summary-card">
+                <!-- ستتم تعبئتها بالجافاسكربت -->
+            </div>
+
+            <div class="progress-grid" id="progress-grid">
+                <!-- ستتم تعبئتها بالجافاسكربت -->
+            </div>
+
+            <div class="recent-activity">
+                <h3 class="activity-title">📊 آخر الاختبارات</h3>
+                <div id="recent-quizzes">
+                    <!-- ستتم تعبئتها بالجافاسكربت -->
+                </div>
+            </div>
+
+            <div class="chapters-progress">
+                <h3 class="activity-title">📚 تقدم الفصول</h3>
+                <div id="chapters-progress">
+                    <!-- ستتم تعبئتها بالجافاسكربت -->
+                </div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span data-lang="home">الرئيسية</span>
+            </a>
+            <a href="chapters.html" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span data-lang="chapters">الفصول</span>
+            </a>
+            <a href="analyzer.html" class="nav-item">
+                <i class="fas fa-microscope"></i>
+                <span data-lang="analyzer">المحلل</span>
+            </a>
+            <a href="flashcards.html" class="nav-item">
+                <i class="fas fa-layer-group"></i>
+                <span data-lang="flashcards">بطاقات</span>
+            </a>
+            <a href="progress.html" class="nav-item active">
+                <i class="fas fa-chart-line"></i>
+                <span data-lang="progress">التقدم</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="../app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function loadProgress() {
+                if (!window.medTermAI) return;
+                
+                const stats = window.medTermAI.getProgressStats?.() || {
+                    savedCount: 0,
+                    quizzesTaken: 0,
+                    averageScore: 0,
+                    chaptersViewed: 0
+                };
+                
+                const userProgress = window.medTermAI.userProgress || {
+                    viewedChapters: [],
+                    completedQuizzes: []
+                };
+                
+                // بطاقة الملخص
+                document.getElementById('summary-card').innerHTML = `
+                    <div class="summary-title">متوسط الأداء</div>
+                    <div class="summary-value">${stats.averageScore}%</div>
+                    <div class="summary-label">منذ البدء</div>
+                `;
+                
+                // شبكة التقدم
+                document.getElementById('progress-grid').innerHTML = `
+                    <div class="progress-item">
+                        <div class="progress-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="progress-number">${stats.chaptersViewed}/11</div>
+                        <div class="progress-text">فصول تمت مشاهدتها</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${(stats.chaptersViewed/11)*100}%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="progress-number">${stats.savedCount}</div>
+                        <div class="progress-text">مصطلحات محفوظة</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${Math.min(stats.savedCount, 100)}%"></div>
+                        </div>
+                    </div>
+                `;
+                
+                // آخر الاختبارات
+                const recentQuizzes = userProgress.completedQuizzes.slice(-5).reverse();
+                let quizzesHtml = '';
+                
+                if (recentQuizzes.length === 0) {
+                    quizzesHtml = '<p style="text-align: center; color: #95a5a6; padding: 20px;">لا توجد اختبارات سابقة</p>';
+                } else {
+                    recentQuizzes.forEach(quiz => {
+                        const date = new Date(quiz.date).toLocaleDateString('ar-EG');
+                        quizzesHtml += `
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <div class="activity-name">اختبار ${quiz.total} أسئلة</div>
+                                    <div class="activity-meta">${date}</div>
+                                </div>
+                                <div class="activity-score">${quiz.score}/${quiz.total}</div>
+                            </div>
+                        `;
+                    });
+                }
+                document.getElementById('recent-quizzes').innerHTML = quizzesHtml;
+                
+                // تقدم الفصول
+                let chaptersHtml = '';
+                for (let i = 1; i <= 11; i++) {
+                    const viewed = userProgress.viewedChapters.includes(i);
+                    chaptersHtml += `
+                        <div class="chapter-progress-item">
+                            <div class="chapter-status ${viewed ? 'completed' : ''}"></div>
+                            <span class="chapter-name">الفصل ${i}</span>
+                            <span>${viewed ? '✅ تم' : '⏳ لم يبدأ'}</span>
+                        </div>
+                    `;
+                }
+                document.getElementById('chapters-progress').innerHTML = chaptersHtml;
+            }
+            
+            setTimeout(loadProgress, 500);
+        });
+    </script>
+</body>
+</html>
